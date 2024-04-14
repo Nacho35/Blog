@@ -1,18 +1,38 @@
 import { API_URL, STRAPI_URL } from "../config";
 
 export async function fetchPosts() {
-	const res = await fetch(`${API_URL}/posts?populate=*`);
-	console.log(API_URL);
-	if (!res.ok) {
-		throw new Error("Oops! Something went wrong");
+	try {
+		const res = await fetch(`${API_URL}/posts?populate=*`);
+		if (!res.ok) {
+			throw new Error("Oops! Something went wrong");
+		}
+		const { data } = await res.json();
+
+		const formattedData = data.map((post) => ({
+			...post,
+			attributes: {
+				...post.attributes,
+				image: post.attributes.image || { data: [] },
+			},
+		}));
+
+		// console.log(formattedData);
+		return formattedData;
+	} catch (error) {
+		console.error("Error fetching posts:", error);
+		return [];
 	}
-	const { data } = await res.json();
-	console.log(data);
-	return data;
 }
 
 export async function getImages(imageData) {
-	const imageUrl = data[0].attributes.image;
-	console.log(imageUrl);
-	return `${STRAPI_URL}${imageUrl}`;
+	try {
+		// console.log("Data received:", imageData);
+		if (imageData && imageData.url) {
+			return `${STRAPI_URL}${imageData.url}`;
+		}
+		return null;
+	} catch (error) {
+		console.error("Error in getImages:", error);
+		return null;
+	}
 }
