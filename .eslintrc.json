@@ -1,3 +1,38 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next", "plugin:prettier/recommended"],
+  "plugins": ["prettier"],
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "@next/next/no-img-element": "off",
+    "indent": "off",
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "double"],
+    "semi": ["error", "always"],
+    "no-unused-vars": "error",
+    "no-undef": "error",
+    "no-shadow": "error",
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "no-new-wrappers": "error",
+    "no-console": "off",
+    "no-alert": "error",
+    "no-debugger": "warn",
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-template": "error",
+    "no-restricted-globals": [
+      "error",
+      "event",
+      "fdescribe",
+      "fit",
+      "xdescribe",
+      "xit"
+    ],
+    "no-restricted-syntax": ["error", "WithStatement"]
+  }
 }
