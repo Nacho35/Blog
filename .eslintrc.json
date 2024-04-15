@@ -7,10 +7,15 @@
     "node": true
   },
   "rules": {
-    "prettier/prettier": "error",
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
     "@next/next/no-img-element": "off",
     "indent": "off",
-    "linebreak-style": ["error", "unix"],
+    "linebreak-style": "off",
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
     "no-unused-vars": "error",
