@@ -1,5 +1,10 @@
-import Index from "./components/Index";
+import Main from "./components/Main";
+import Theme from "./styles/theme";
 
 export default function Home() {
-  return <Index />;
+  return (
+    <Theme>
+      <Main />
+    </Theme>
+  );
 }
