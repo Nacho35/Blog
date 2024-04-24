@@ -2,6 +2,8 @@ import flowbite from "flowbite-react/tailwind";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  prefix: "tw-",
+  important: true,
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
