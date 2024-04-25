@@ -37,9 +37,13 @@ const Main = () => {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row lg:justify-between">
+    <div className="tw-flex tw-flex-col tw-text-center tw-items-center tw-my-4 tw-justify-center lg:tw-flex lg:tw-flex-row lg:tw-justify-between lg:tw-my-4 lg:tw-mx-2">
       {posts.map((post) => (
-        <Card key={post.id} sx={{ maxWidth: 345 }}>
+        <Card
+          key={post.id}
+          sx={{ maxWidth: 345 }}
+          className="tw-mb-4 tw-w-full"
+        >
           <CardMedia
             component="img"
             height="140"
