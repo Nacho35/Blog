@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <Theme>
-        <body>{children}</body>
+        <body className="tw-bg-shaft">{children}</body>
       </Theme>
     </html>
   );
