@@ -1,4 +1,4 @@
-import { Typography, Pagination, Stack } from "@mui/material";
+import { Pagination, Stack } from "@mui/material";
 
 const PaginationControlled = ({ page, setPage, totalPages }) => {
   const handleChange = (event, value) => {
@@ -8,17 +8,16 @@ const PaginationControlled = ({ page, setPage, totalPages }) => {
   return (
     <Stack
       sx={{
-        pt: 6,
-        color: "white.main",
+        backgroundColor: "light.main",
         textAlign: "center",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
+        padding: "8px",
       }}
       spacing={2}
     >
-      <Typography>Página: {page}</Typography>
       <Pagination count={totalPages} page={page} onChange={handleChange} />
     </Stack>
   );
