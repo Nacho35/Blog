@@ -1,7 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Card, CardContent, CardMedia, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  CardActionArea,
+} from "@mui/material";
 import PaginationControlled from "./PaginationControlled";
 import { fetchPosts, getImages } from "../services/postsService";
 
@@ -63,50 +69,52 @@ const Main = () => {
               border: "1px solid #fff",
             }}
           >
-            <CardMedia
-              component="img"
-              height="140"
-              image={post.attributes.imageUrl}
-              alt="cover"
-              className="tw-object-cover"
-            />
-            <CardContent
-              sx={{
-                overflowWrap: "break-word",
-                wordWrap: "break-word",
-                whiteSpace: "normal",
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                lineHeight: "1.5",
-              }}
-            >
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="div"
-                sx={{ color: "white.main" }}
+            <CardActionArea style={{ padding: 0 }}>
+              <CardMedia
+                component="img"
+                height="140"
+                image={post.attributes.imageUrl}
+                alt="cover"
+                className="tw-object-cover"
+              />
+              <CardContent
+                sx={{
+                  overflowWrap: "break-word",
+                  wordWrap: "break-word",
+                  whiteSpace: "normal",
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  lineHeight: "1.5",
+                }}
               >
-                {post.attributes.title}
-              </Typography>
-              <Typography
-                variant="body3"
-                sx={{ color: "danger.main", textTransform: "capitalize" }}
-              >
-                {new Date(post.attributes.created).toLocaleString("es-ES", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </Typography>
-              <Typography variant="body2" sx={{ my: 2, color: "white.main" }}>
-                {post.attributes.content}
-              </Typography>
-            </CardContent>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="div"
+                  sx={{ color: "white.main" }}
+                >
+                  {post.attributes.title}
+                </Typography>
+                <Typography
+                  variant="body3"
+                  sx={{ color: "danger.main", textTransform: "capitalize" }}
+                >
+                  {new Date(post.attributes.created).toLocaleString("es-ES", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </Typography>
+                <Typography variant="body2" sx={{ my: 2, color: "white.main" }}>
+                  {post.attributes.content}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
           </Card>
         </Link>
       ))}
