@@ -13,6 +13,9 @@ export default function Theme({ children }) {
       secondary: {
         main: Colors.secondary,
       },
+      tertiary: {
+        main: Colors.tertiary,
+      },
       info: {
         main: Colors.info,
       },
