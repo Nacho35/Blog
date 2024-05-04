@@ -6,20 +6,21 @@ const PaginationControlled = ({ page, setPage, totalPages }) => {
   };
 
   return (
-    <Stack
-      sx={{
-        backgroundColor: "light.main",
-        textAlign: "center",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        padding: "8px",
-      }}
-      spacing={2}
-    >
-      <Pagination count={totalPages} page={page} onChange={handleChange} />
-    </Stack>
+    <div className="tw-static tw-bottom-0 tw-left-0 tw-w-full">
+      <div className="tw-container tw-mx-auto">
+        <Stack
+          sx={{
+            width: "100%",
+            paddingTop: "1rem",
+            direction: "column",
+            alignItems: "center",
+          }}
+          spacing={2}
+        >
+          <Pagination count={totalPages} page={page} onChange={handleChange} />
+        </Stack>
+      </div>
+    </div>
   );
 };
 

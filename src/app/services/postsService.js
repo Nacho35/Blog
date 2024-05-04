@@ -38,3 +38,29 @@ export async function getImages(imageData) {
     return null;
   }
 }
+
+export async function fetchPostBySlug(slug) {
+  try {
+    const res = await fetch(`${API_URL}/posts?filters[slug][$eq]=${slug}`);
+    if (!res.ok) {
+      throw new Error("Oops Something went wrong");
+    }
+    const responseJson = await res.json();
+    if (responseJson.data.length > 0) {
+      const post = responseJson.data[0];
+      return post;
+    } else {
+      console.log("No post found for slug:", slug);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching post by slug:", error);
+    return null;
+  }
+}
+
+// (async () => {
+//   const slug = "stop-using-local-storage";
+//   const post = await fetchPostBySlug(slug);
+//   console.log(post);
+// })();
