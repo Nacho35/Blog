@@ -1,15 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import {
   Card,
+  CardActionArea,
   CardContent,
   CardMedia,
   Typography,
-  CardActionArea,
 } from "@mui/material";
-import PaginationControlled from "./PaginationControlled";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { fetchPosts, getImages } from "../services/postsService";
+import PaginationControlled from "./PaginationControlled";
 
 const Main = () => {
   const [posts, setPosts] = useState([]);
@@ -53,7 +53,7 @@ const Main = () => {
   return (
     <div className="tw-container tw-flex tw-flex-col tw-p-6 tw-items-center tw-mx-auto md:tw-grid md:tw-grid-cols-2 md:tw-gap-4 md:tw-p-6 lg:tw-grid lg:tw-grid-cols-2 lg:tw-gap-4 lg:tw-p-6 xl:tw-grid xl:tw-grid-cols-3 xl:tw-gap-4 xl:tw-p-6 tw-text-left">
       {posts.map((post) => (
-        <Link href={`/blog/${post.attributes.slug}`} key={post.id}>
+        <Link href={`/posts/${post.attributes.slug}`} key={post.id}>
           <Card
             sx={{
               maxWidth: 380,
