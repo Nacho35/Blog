@@ -59,8 +59,8 @@ export async function fetchPostBySlug(slug) {
   }
 }
 
-(async () => {
-  const slug = "stop-using-local-storage";
-  const post = await fetchPostBySlug(slug);
-  console.log(post);
-})();
+// (async () => {
+//   const slug = "stop-using-local-storage";
+//   const post = await fetchPostBySlug(slug);
+//   console.log(post);
+// })();
