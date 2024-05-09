@@ -2,6 +2,7 @@ export const Colors = {
   primary: "#E1E0DE",
   secondary: "#A0D6B4",
   tertiary: "#F0EADA",
+  alternative: "#C0BBAE",
   info: "#A6CAF0",
   danger: "#FFB7B2",
   warning: "#FFF3B0",

@@ -1,9 +1,11 @@
 "use client";
 import {
+  Box,
   Card,
   CardActionArea,
   CardContent,
   CardMedia,
+  Grid,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
@@ -51,78 +53,104 @@ const Main = () => {
   }, [page]);
 
   return (
-    <div className="tw-container tw-flex tw-flex-col tw-p-6 tw-items-center tw-mx-auto md:tw-grid md:tw-grid-cols-2 md:tw-gap-4 md:tw-p-6 lg:tw-grid lg:tw-grid-cols-2 lg:tw-gap-4 lg:tw-p-6 xl:tw-grid xl:tw-grid-cols-3 xl:tw-gap-4 xl:tw-p-6 tw-text-left">
-      {posts.map((post) => (
-        <Link href={`/posts/${post.attributes.slug}`} key={post.id}>
-          <Card
-            sx={{
-              maxWidth: 380,
-              height: "500px",
-              mt: 1,
-              mb: 1,
-              mx: "auto",
-              backgroundColor: "white.main",
-            }}
-            uuid={post.attributes.uuid}
-          >
-            <CardActionArea style={{ padding: 0 }}>
-              <CardMedia
-                component="img"
-                height="140"
-                image={post.attributes.imageUrl}
-                alt="cover"
-                className="tw-object-cover"
-              />
-              <CardContent
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        gap: 2,
+      }}
+    >
+      <Grid container spacing={2}>
+        {posts.map((post) => (
+          <Grid item xs={12} sm={6} md={4} key={post.id}>
+            <Link href={`/posts/${post.attributes.slug}`}>
+              <Card
                 sx={{
-                  overflowWrap: "break-word",
-                  wordWrap: "break-word",
-                  whiteSpace: "normal",
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  lineHeight: "1.5",
+                  maxWidth: 380,
+                  height: "500px",
+                  mt: 1,
+                  mb: 1,
+                  mx: "auto",
+                  backgroundColor: "white.main",
                 }}
+                uuid={post.attributes.uuid}
               >
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="div"
-                  sx={{ color: "dark.main" }}
-                >
-                  {post.attributes.title}
-                </Typography>
-                <Typography
-                  variant="body3"
-                  sx={{ color: "shaft.main", textTransform: "capitalize" }}
-                >
-                  {new Date(post.attributes.created).toLocaleString("es-ES", {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </Typography>
-                <Typography variant="body2" sx={{ my: 2, color: "shaft.main" }}>
-                  {post.attributes.content}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Link>
-      ))}
-      <div className="tw-container"></div>
-      <div className="tw-w-full tw-flex tw-justify-center tw-items-center">
+                <CardActionArea style={{ padding: 0 }}>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={post.attributes.imageUrl}
+                    alt="cover"
+                    className="tw-object-cover"
+                  />
+                  <CardContent
+                    sx={{
+                      overflowWrap: "break-word",
+                      wordWrap: "break-word",
+                      whiteSpace: "normal",
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      lineHeight: "1.5",
+                    }}
+                  >
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      sx={{ color: "dark.main" }}
+                    >
+                      {post.attributes.title}
+                    </Typography>
+                    <Typography
+                      variant="body3"
+                      sx={{ color: "shaft.main", textTransform: "capitalize" }}
+                    >
+                      {new Date(post.attributes.created).toLocaleString(
+                        "es-ES",
+                        {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        },
+                      )}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ my: 2, color: "shaft.main" }}
+                    >
+                      {post.attributes.content}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Link>
+          </Grid>
+        ))}
+      </Grid>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          maxWidth: "md",
+          py: 2,
+        }}
+      >
         <PaginationControlled
           page={page}
           setPage={setPage}
           totalPages={totalPages}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

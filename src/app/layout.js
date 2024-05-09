@@ -1,5 +1,5 @@
-import Theme from "./styles/theme";
 import "./globals.css";
+import Theme from "./styles/theme";
 
 export const metadata = {
   title: "Blog Codigo & Cafe",
@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <Theme>
-        <body className="tw-bg-shaft">{children}</body>
+        <body className="tw-bg-alternative">{children}</body>
       </Theme>
     </html>
   );
