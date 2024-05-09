@@ -1,8 +1,8 @@
 "use client";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import { Colors } from "./colors";
 import "@fontsource/roboto";
+import CssBaseline from "@mui/material/CssBaseline";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Colors } from "./colors";
 
 export default function Theme({ children }) {
   const theme = createTheme({
@@ -12,6 +12,12 @@ export default function Theme({ children }) {
       },
       secondary: {
         main: Colors.secondary,
+      },
+      tertiary: {
+        main: Colors.tertiary,
+      },
+      alternative: {
+        main: Colors.alternative,
       },
       info: {
         main: Colors.info,

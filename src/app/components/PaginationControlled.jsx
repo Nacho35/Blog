@@ -1,4 +1,4 @@
-import { Pagination, Stack } from "@mui/material";
+import { Pagination } from "@mui/material";
 
 const PaginationControlled = ({ page, setPage, totalPages }) => {
   const handleChange = (event, value) => {
@@ -6,20 +6,16 @@ const PaginationControlled = ({ page, setPage, totalPages }) => {
   };
 
   return (
-    <Stack
-      sx={{
-        backgroundColor: "light.main",
-        textAlign: "center",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        padding: "8px",
-      }}
-      spacing={2}
-    >
-      <Pagination count={totalPages} page={page} onChange={handleChange} />
-    </Stack>
+    <div style={{ display: "flex", justifyContent: "center", padding: "1rem" }}>
+      <Pagination
+        count={totalPages}
+        page={page}
+        onChange={handleChange}
+        showFirstButton
+        showLastButton
+        variant="outlined"
+      />
+    </div>
   );
 };
 

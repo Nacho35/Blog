@@ -1,15 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import {
+  Box,
   Card,
+  CardActionArea,
   CardContent,
   CardMedia,
+  Grid,
   Typography,
-  CardActionArea,
 } from "@mui/material";
-import PaginationControlled from "./PaginationControlled";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { fetchPosts, getImages } from "../services/postsService";
+import PaginationControlled from "./PaginationControlled";
 
 const Main = () => {
   const [posts, setPosts] = useState([]);
@@ -51,82 +53,104 @@ const Main = () => {
   }, [page]);
 
   return (
-    <div className="tw-container tw-flex tw-flex-col tw-p-6 tw-items-center tw-mx-auto md:tw-grid md:tw-grid-cols-2 md:tw-gap-4 md:tw-p-6 lg:tw-grid lg:tw-grid-cols-2 lg:tw-gap-4 lg:tw-p-6 xl:tw-grid xl:tw-grid-cols-3 xl:tw-gap-4 xl:tw-p-6 tw-text-left">
-      {posts.map((post) => (
-        <Link
-          href={`/post/${post.id}`}
-          key={post.id}
-          className="tw-no-underline"
-        >
-          <Card
-            sx={{
-              maxWidth: 380,
-              height: "500px",
-              mt: 1,
-              mb: 1,
-              mx: "auto",
-              backgroundColor: "shaft.main",
-              border: "1px solid #fff",
-            }}
-          >
-            <CardActionArea style={{ padding: 0 }}>
-              <CardMedia
-                component="img"
-                height="140"
-                image={post.attributes.imageUrl}
-                alt="cover"
-                className="tw-object-cover"
-              />
-              <CardContent
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        gap: 2,
+      }}
+    >
+      <Grid container spacing={2}>
+        {posts.map((post) => (
+          <Grid item xs={12} sm={6} md={4} key={post.id}>
+            <Link href={`/posts/${post.attributes.slug}`}>
+              <Card
                 sx={{
-                  overflowWrap: "break-word",
-                  wordWrap: "break-word",
-                  whiteSpace: "normal",
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  lineHeight: "1.5",
+                  maxWidth: 380,
+                  height: "500px",
+                  mt: 1,
+                  mb: 1,
+                  mx: "auto",
+                  backgroundColor: "white.main",
                 }}
+                uuid={post.attributes.uuid}
               >
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="div"
-                  sx={{ color: "white.main" }}
-                >
-                  {post.attributes.title}
-                </Typography>
-                <Typography
-                  variant="body3"
-                  sx={{ color: "danger.main", textTransform: "capitalize" }}
-                >
-                  {new Date(post.attributes.created).toLocaleString("es-ES", {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </Typography>
-                <Typography variant="body2" sx={{ my: 2, color: "white.main" }}>
-                  {post.attributes.content}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Link>
-      ))}
-      <div className="tw-flex-grow-0 tw-pt-20"></div>
-      <div className="tw-fixed tw-bottom-0 tw-left-0 tw-right-0 tw-z-50 tw-bg-muted tw-flex tw-justify-center tw-items-center">
+                <CardActionArea style={{ padding: 0 }}>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={post.attributes.imageUrl}
+                    alt="cover"
+                    className="tw-object-cover"
+                  />
+                  <CardContent
+                    sx={{
+                      overflowWrap: "break-word",
+                      wordWrap: "break-word",
+                      whiteSpace: "normal",
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      lineHeight: "1.5",
+                    }}
+                  >
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      sx={{ color: "dark.main" }}
+                    >
+                      {post.attributes.title}
+                    </Typography>
+                    <Typography
+                      variant="body3"
+                      sx={{ color: "shaft.main", textTransform: "capitalize" }}
+                    >
+                      {new Date(post.attributes.created).toLocaleString(
+                        "es-ES",
+                        {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        },
+                      )}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ my: 2, color: "shaft.main" }}
+                    >
+                      {post.attributes.content}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Link>
+          </Grid>
+        ))}
+      </Grid>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          maxWidth: "md",
+          py: 2,
+        }}
+      >
         <PaginationControlled
           page={page}
           setPage={setPage}
           totalPages={totalPages}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
