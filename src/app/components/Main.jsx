@@ -66,7 +66,7 @@ const Main = () => {
       <Grid container spacing={2}>
         {posts.map((post) => (
           <Grid item xs={12} sm={6} md={4} key={post.id}>
-            <Link href={`/posts/${post.attributes.slug}`}>
+            <Link href={`/post/${post.attributes.slug}`}>
               <Card
                 sx={{
                   maxWidth: 380,
@@ -126,7 +126,7 @@ const Main = () => {
                       variant="body2"
                       sx={{ my: 2, color: "shaft.main" }}
                     >
-                      {post.attributes.content}
+                      {post.attributes.content.substring(0, 200)}
                     </Typography>
                   </CardContent>
                 </CardActionArea>

@@ -41,7 +41,9 @@ export async function getImages(imageData) {
 
 export async function fetchPostBySlug(slug) {
   try {
-    const res = await fetch(`${API_URL}/posts?filters[slug][$eq]=${slug}`);
+    const res = await fetch(
+      `${API_URL}/posts?filters[slug][$eq]=${slug}&populate=image`,
+    );
     if (!res.ok) {
       throw new Error("Oops Something went wrong");
     }
