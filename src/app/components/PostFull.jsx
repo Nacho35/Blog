@@ -3,10 +3,12 @@ const PostFull = ({ post }) => {
     return <div>Loading...</div>;
   }
 
+  const imageUrl = post.attributes.image.data.attributes.url;
+
   return (
     <div>
       <img
-        src={post.attributes.image.data.attributes.url}
+        src={`http://localhost:1337${imageUrl}`}
         alt={post.attributes.title}
         width={500}
         height={300}
