@@ -56,6 +56,15 @@ export default function Theme({ children }) {
     typography: {
       fontFamily: "Roboto, sans-serif",
     },
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 960,
+        lg: 1280,
+        xl: 1920,
+      },
+    },
   });
   return (
     <ThemeProvider theme={theme}>
