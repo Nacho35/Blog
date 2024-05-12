@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { fetchPosts, getImages } from "../services/postsService";
 import PaginationControlled from "./PaginationControlled";
 
@@ -69,7 +69,7 @@ const Main = () => {
             <Link href={`/post/${post.attributes.slug}`}>
               <Card
                 sx={{
-                  maxWidth: 380,
+                  maxWidth: 400,
                   height: "500px",
                   mt: 1,
                   mb: 1,
@@ -81,10 +81,13 @@ const Main = () => {
                 <CardActionArea style={{ padding: 0 }}>
                   <CardMedia
                     component="img"
-                    height="140"
                     image={post.attributes.imageUrl}
                     alt="cover"
-                    className="tw-object-cover"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      objectFit: "cover",
+                    }}
                   />
                   <CardContent
                     sx={{
@@ -124,9 +127,31 @@ const Main = () => {
                     </Typography>
                     <Typography
                       variant="body2"
-                      sx={{ my: 2, color: "shaft.main" }}
+                      sx={{
+                        my: 2,
+                        color: "shaft.main",
+                        fontSize: "16px",
+                        lineHeight: "1.5",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        display: "-webkit-box",
+                        WebkitLineClamp: "3",
+                        WebkitBoxOrient: "vertical",
+                      }}
                     >
-                      {post.attributes.content.substring(0, 200)}
+                      {post.attributes.content.map((paragraph, index) => {
+                        return (
+                          <Fragment key={index}>
+                            {paragraph.children.map((child, childIndex) => {
+                              return (
+                                <Fragment key={childIndex}>
+                                  {child.text}
+                                </Fragment>
+                              );
+                            })}
+                          </Fragment>
+                        );
+                      })}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
