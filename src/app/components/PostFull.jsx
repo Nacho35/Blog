@@ -1,5 +1,6 @@
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { Fragment } from "react";
+import PostComments from "./PostComments";
 import ProgressBar from "./ProgressBar";
 
 const PostFull = ({ post }) => {
@@ -76,24 +77,8 @@ const PostFull = ({ post }) => {
           </Box>
         </Box>
       </Box>
-      <Box
-        sx={{
-          border: "1px solid #333",
-          padding: "20px",
-          my: "30px",
-          borderRadius: "8px",
-          overflow: "visible",
-          maxHeight: "200px",
-          wordWrap: "break-word",
-          whiteSpace: "normal",
-          lineHeight: "1.6",
-          flexGrow: 1,
-        }}
-      >
-        <Typography variant="body1">{post.attributes.comment}</Typography>
-        <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-          Responder
-        </Button>
+      <Box>
+        <PostComments postId={post.id} />
       </Box>
     </Container>
   );
