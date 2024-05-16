@@ -1,4 +1,4 @@
-import { Button, TextField } from "@mui/material";
+import { Box, Button, Container, TextField } from "@mui/material";
 import { useState } from "react";
 
 const RegisterForm = () => {
@@ -38,45 +38,89 @@ const RegisterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        label="Correo Electrónico"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        required
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <TextField
-        label="Nombre de Usuario"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        required
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <TextField
-        label="Contraseña"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        required
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        fullWidth
-        style={{ marginTop: "20px" }}
+    <Container
+      maxWidth="false"
+      sx={{
+        backgroundImage: "url(/palms.jpg)",
+        objectFit: "cover",
+        backgroundPosition: "center",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
+      <form
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          height: "100vh",
+          width: "100%",
+        }}
+        onSubmit={handleSubmit}
       >
-        Registrarse
-      </Button>
-    </form>
+        <h2
+          style={{
+            fontSize: "2rem",
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: "20px",
+            textTransform: "capitalize",
+          }}
+        >
+          ¡Bienvenido! crea tu cuenta
+        </h2>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              width: "50%",
+            }}
+          >
+            <TextField
+              label="Correo Electrónico"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              label="Nombre de Usuario"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              required
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <TextField
+              label="Contraseña"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              required
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Box>
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            width="50%"
+            sx={{ marginTop: "20px" }}
+          >
+            Registrarse
+          </Button>
+        </Box>
+      </form>
+    </Container>
   );
 };
 
