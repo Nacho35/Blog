@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
 import { fetchCommentsForPost } from "../../app/services/commentsService";
 
 const PostComments = ({ postId }) => {
@@ -25,13 +26,19 @@ const PostComments = ({ postId }) => {
   const handleCommentSubmit = async (event) => {
     event.preventDefault();
 
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      toast.error("No hay un token de autenticación válido.");
+      return;
+    }
+
     const commentData = {
       postId,
       content: newComment,
       author: {
-        id: sessionStorage.getItem("userId"), // Asegúrate de que esta información esté disponible
-        name: sessionStorage.getItem("username"), // Asegúrate de que esta información esté disponible
-        email: sessionStorage.getItem("email"), // Asegúrate de que esta información esté disponible
+        id: sessionStorage.getItem("userId"),
+        name: sessionStorage.getItem("username"),
+        email: sessionStorage.getItem("email"),
       },
     };
 
@@ -48,16 +55,14 @@ const PostComments = ({ postId }) => {
         },
       );
 
-      if (!response.ok) {
-        throw new Error("Error al publicar el comentario");
+      if (response.ok) {
+        const responseData = await response.json();
+        setComments([...comments, responseData]);
+        setNewComment("");
       }
-
-      const responseData = await response.json();
-      setComments([...comments, responseData]);
-      setNewComment("");
+      toast.success("¡Comentario publicado exitosamente!");
     } catch (error) {
-      console.error(error);
-      // Manejar el error
+      toast.error(`Ocurrió un error: ${error.message}`);
     }
   };
 
@@ -67,7 +72,7 @@ const PostComments = ({ postId }) => {
         <Typography variant="h6">Comentarios:</Typography>
         {comments.length === 0 ? (
           <Typography variant="body1" align="center" sx={{ marginTop: "20px" }}>
-            ¡Au, sin comentarios por el momento Agrega uno y deja tu huella.
+            ¡Au, sin comentarios por el momento!
           </Typography>
         ) : (
           comments.map((comment) => (
@@ -136,6 +141,7 @@ const PostComments = ({ postId }) => {
           >
             Publicar
           </Button>
+          <Toaster position="top-center" reverseOrder={false} />
         </form>
       ) : null}
     </Container>
@@ -143,3 +149,4 @@ const PostComments = ({ postId }) => {
 };
 
 export default PostComments;
+// TODO: Mejorar la UI de los comentarios

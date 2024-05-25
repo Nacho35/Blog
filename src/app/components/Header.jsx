@@ -12,10 +12,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const router = useRouter();
+  const username = useAuth();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -81,7 +83,7 @@ const Header = () => {
               onClick={handleOpenNavMenu}
               color="black"
               sx={{
-                "& .MuiSvgIcon-root": {
+                "&.MuiSvgIcon-root": {
                   fontSize: "2.5rem",
                 },
               }}
@@ -106,12 +108,20 @@ const Header = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              <MenuItem onClick={handleLogin}>
-                <Typography textAlign="center">Iniciar sesión</Typography>
-              </MenuItem>
-              <MenuItem onClick={handleRegister}>
-                <Typography textAlign="center">Registrarse</Typography>
-              </MenuItem>
+              {!username
+                ? [
+                    <MenuItem key="login" onClick={handleLogin}>
+                      <Typography textAlign="center">Iniciar sesión</Typography>
+                    </MenuItem>,
+                    <MenuItem key="register" onClick={handleRegister}>
+                      <Typography textAlign="center">Registrarse</Typography>
+                    </MenuItem>,
+                  ]
+                : [
+                    <MenuItem key="username" onClick={() => {}}>
+                      <Typography textAlign="center">{username}</Typography>
+                    </MenuItem>,
+                  ]}
             </Menu>
           </Box>
 
@@ -121,22 +131,28 @@ const Header = () => {
               justifyContent: "flex-end",
             }}
           >
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{ mx: 1 }}
-              onClick={handleLogin}
-            >
-              Iniciar sesión
-            </Button>
-            <Button
-              variant="contained"
-              color="info"
-              sx={{ mx: 1 }}
-              onClick={handleRegister}
-            >
-              Registrarse
-            </Button>
+            {!username ? (
+              <>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{ mx: 1 }}
+                  onClick={handleLogin}
+                >
+                  Iniciar sesión
+                </Button>
+                <Button
+                  variant="contained"
+                  color="info"
+                  sx={{ mx: 1 }}
+                  onClick={handleRegister}
+                >
+                  Registrarse
+                </Button>
+              </>
+            ) : (
+              <Typography>{username}</Typography>
+            )}
           </Box>
         </Toolbar>
       </Container>
@@ -145,3 +161,5 @@ const Header = () => {
 };
 
 export default Header;
+
+// TODO: Agregar cambio de menu para usuarios logueados

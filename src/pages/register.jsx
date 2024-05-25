@@ -37,6 +37,9 @@ const RegisterForm = () => {
       );
 
       if (response.ok) {
+        const responseData = await response.json();
+        sessionStorage.setItem("token", responseData.jwt);
+
         toast.success("Registro exitoso Ahora puedes iniciar sesión.");
         setTimeout(() => {
           router.push("/login");
@@ -56,6 +59,7 @@ const RegisterForm = () => {
 
   return (
     <Container
+      maxWidth="sm"
       sx={{
         height: "100vh",
         width: "100%",
@@ -66,7 +70,6 @@ const RegisterForm = () => {
       }}
     >
       <Container
-        maxWidth="sm"
         sx={{
           display: "flex",
           flexDirection: "column",
