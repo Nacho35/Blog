@@ -2,20 +2,34 @@ import { useEffect, useState } from "react";
 
 export const useAuth = () => {
   const [username, setUsername] = useState("");
+  const [token, setToken] = useState("");
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    if (token) {
+    const storedToken = sessionStorage.getItem("token");
+    if (storedToken) {
       try {
         const decodedToken = JSON.parse(
-          Buffer.from(token.split(".")[1], "base64").toString(),
+          Buffer.from(storedToken.split(".")[1], "base64").toString(),
         );
         setUsername(decodedToken.username);
+        setToken(storedToken);
       } catch (error) {
         console.error("Error decodificando el token:", error);
       }
     }
   }, []);
 
-  return username;
+  const login = (newUsername, newToken) => {
+    setUsername(newUsername);
+    setToken(newToken);
+    sessionStorage.setItem("token", newToken);
+  };
+
+  const logout = () => {
+    setUsername("");
+    setToken("");
+    sessionStorage.removeItem("token");
+  };
+
+  return { username, token, login, logout };
 };

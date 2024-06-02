@@ -17,7 +17,7 @@ import { useAuth } from "../hooks/useAuth";
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const router = useRouter();
-  const username = useAuth();
+  const { username, login } = useAuth();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -28,6 +28,17 @@ const Header = () => {
   };
 
   const handleLogin = () => {
+    router.push("/login");
+  };
+
+  const ManagerLogin = () => {
+    const newToken = sessionStorage.getItem("token");
+    if (newToken) {
+      login(username, newToken);
+      router.push("/");
+      return;
+    }
+
     router.push("/login");
   };
 
@@ -118,9 +129,13 @@ const Header = () => {
                     </MenuItem>,
                   ]
                 : [
-                    <MenuItem key="username" onClick={() => {}}>
-                      <Typography textAlign="center">{username}</Typography>
-                    </MenuItem>,
+                    <Button
+                      key="login"
+                      textAlign="center"
+                      onClick={ManagerLogin}
+                    >
+                      Cerrar sesión
+                    </Button>,
                   ]}
             </Menu>
           </Box>
@@ -151,7 +166,9 @@ const Header = () => {
                 </Button>
               </>
             ) : (
-              <Typography>{username}</Typography>
+              <Button variant="contained" onClick={ManagerLogin}>
+                Cerrar sesión
+              </Button>
             )}
           </Box>
         </Toolbar>
@@ -161,5 +178,4 @@ const Header = () => {
 };
 
 export default Header;
-
-// TODO: Agregar cambio de menu para usuarios logueados
+// TODO hacer que el boton de logout aparesca solo si hay un usuario logueado

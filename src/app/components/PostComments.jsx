@@ -1,3 +1,5 @@
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import ModeEditOutlineRoundedIcon from "@mui/icons-material/ModeEditOutlineRounded";
 import {
   Box,
   Button,
@@ -8,7 +10,11 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import { fetchCommentsForPost } from "../../app/services/commentsService";
+import {
+  fetchCommentsForPost,
+  fetchDeleteComment,
+  fetchUpdateComment,
+} from "../../app/services/commentsService";
 
 const PostComments = ({ postId }) => {
   const [comments, setComments] = useState([]);
@@ -31,16 +37,26 @@ const PostComments = ({ postId }) => {
       toast.error("No hay un token de autenticación válido.");
       return;
     }
+    const userId = sessionStorage.getItem("userId");
+    const username = sessionStorage.getItem("username");
+    const email = sessionStorage.getItem("email");
 
+    if (!userId || !username || !email) {
+      toast.error("Faltan datos del usuario.");
+      return;
+    }
+    // TODO Revisar porque los datos del objeto de comentario no son null en author
     const commentData = {
       postId,
       content: newComment,
       author: {
-        id: sessionStorage.getItem("userId"),
-        name: sessionStorage.getItem("username"),
-        email: sessionStorage.getItem("email"),
+        id: userId,
+        name: username,
+        email: email,
       },
     };
+
+    sessionStorage.setItem("lastCommentData", JSON.stringify(commentData));
 
     try {
       const response = await fetch(
@@ -66,10 +82,52 @@ const PostComments = ({ postId }) => {
     }
   };
 
+  const handleDeleteClick = async (commentId) => {
+    try {
+      const deletedComment = await fetchDeleteComment(commentId);
+      if (deletedComment) {
+        const updatedComments = comments.filter(
+          (comment) => comment.id !== commentId,
+        );
+        setComments(updatedComments);
+        toast.success("Comentario eliminado exitosamente!");
+      }
+    } catch (error) {
+      toast.error("Ocurrió un error al intentar eliminar el comentario");
+    }
+  };
+
+  const handleEditClick = async (commentId, newContent) => {
+    try {
+      const authorId = sessionStorage.getItem("userId");
+
+      const updatedComment = await fetchUpdateComment(
+        commentId,
+        newContent,
+        authorId,
+      );
+
+      if (updatedComment) {
+        const updatedComments = comments.map((comment) => {
+          if (comment.id === commentId) {
+            return { ...comment, content: newContent };
+          }
+          return comment;
+        });
+        setComments(updatedComments);
+        toast.success("Comentario actualizado exitosamente!");
+      }
+    } catch (error) {
+      toast.error("Ocurrió error al intentar actualizar el comentario");
+    }
+  };
+
   return (
     <Container maxWidth="lg">
-      <Paper elevation={3} sx={{ p: 2, mb: 2, border: "2px solid #333" }}>
-        <Typography variant="h6">Comentarios:</Typography>
+      <Paper elevation={0} sx={{ p: 2, mb: 2 }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Comentarios:
+        </Typography>
         {comments.length === 0 ? (
           <Typography variant="body1" align="center" sx={{ marginTop: "20px" }}>
             ¡Au, sin comentarios por el momento!
@@ -83,7 +141,7 @@ const PostComments = ({ postId }) => {
                 alignItems: "left",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                marginBottom: "16px",
+                marginBottom: "1rem",
               }}
             >
               <Box
@@ -112,12 +170,27 @@ const PostComments = ({ postId }) => {
                 <Typography variant="body1">{comment.content}</Typography>
               </Box>
               {sessionStorage.getItem("token") && (
-                <>
-                  <Button variant="text">Editar</Button>
-                  <Button variant="text" color="error">
-                    Eliminar
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "end",
+                    alignItems: "center",
+                  }}
+                >
+                  <Button
+                    variant="text"
+                    onClick={() => handleEditClick(comment.id)}
+                  >
+                    <ModeEditOutlineRoundedIcon />
                   </Button>
-                </>
+                  <Button
+                    variant="text"
+                    color="error"
+                    onClick={() => handleDeleteClick(comment.id)}
+                  >
+                    <DeleteRoundedIcon />
+                  </Button>
+                </Box>
               )}
             </Box>
           ))
@@ -149,4 +222,3 @@ const PostComments = ({ postId }) => {
 };
 
 export default PostComments;
-// TODO: Mejorar la UI de los comentarios

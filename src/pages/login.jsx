@@ -1,8 +1,13 @@
 import {
+  Avatar,
   Box,
   Button,
+  Checkbox,
   Container,
-  FormControl,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  Link,
   TextField,
   Typography,
 } from "@mui/material";
@@ -14,7 +19,9 @@ const Login = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const handleSignIn = async () => {
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const response = await fetch("http://localhost:1337/api/auth/local", {
       method: "POST",
       headers: {
@@ -30,7 +37,7 @@ const Login = () => {
         const responseData = await response.json();
         sessionStorage.setItem("token", responseData.jwt);
 
-        toast.success("Login exitoso");
+        toast.success("¡Bienvenido!");
         setTimeout(() => {
           router.push("/");
         }, 3000);
@@ -39,74 +46,76 @@ const Login = () => {
       }
     }
   };
+
   return (
-    <Container maxWidth="sm" sx={{ width: "100%", height: "100vh" }}>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
       <Box
         sx={{
+          marginTop: 8,
           display: "flex",
-          justifyContent: "center",
           flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <Typography variant="h4" sx={{ textAlign: "center" }}>
-          Iniciar Sesión
+        <Avatar sx={{ m: 1, bgcolor: "primary.main" }}></Avatar>
+        <Typography component="h1" variant="h5">
+          Iniciar sesión
         </Typography>
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          flexDirection: "column",
-        }}
-      >
-        <FormControl>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              width: "100%",
-            }}
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Dirección de correo electrónico"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Contraseña"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <FormControlLabel
+            control={<Checkbox value="remember" color="primary" />}
+            label="Recordarme"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
           >
-            <TextField
-              label="Email"
-              type="email"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              required
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-            />
-            <TextField
-              label="Password"
-              type="password"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Box>
-        </FormControl>
+            Iniciar sesión
+          </Button>
+          <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2" sx={{ cursor: "pointer" }}>
+                ¿Has olvidado tu contraseña?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href="/register" variant="body2" sx={{ cursor: "pointer" }}>
+                {"¿No tienes una cuenta?"}
+              </Link>
+            </Grid>
+          </Grid>
+        </Box>
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          sx={{ marginTop: "20px" }}
-          onClick={handleSignIn}
-        >
-          Login
-        </Button>
-        <Toaster position="top-center" reverseOrder={false} />
-      </Box>
+      <Toaster position="top-center" reverseOrder={false} />
     </Container>
   );
 };
 
 export default Login;
-
-// TODO: Terminar la UI de Login

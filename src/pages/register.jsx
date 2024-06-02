@@ -1,8 +1,11 @@
+import VpnKeyRoundedIcon from "@mui/icons-material/VpnKeyRounded";
 import {
+  Avatar,
   Box,
   Button,
   Container,
-  FormControl,
+  CssBaseline,
+  Grid,
   Link,
   TextField,
   Typography,
@@ -40,7 +43,7 @@ const RegisterForm = () => {
         const responseData = await response.json();
         sessionStorage.setItem("token", responseData.jwt);
 
-        toast.success("Registro exitoso Ahora puedes iniciar sesión.");
+        toast.success("Registro exitoso!");
         setTimeout(() => {
           router.push("/login");
         }, 4000);
@@ -58,121 +61,81 @@ const RegisterForm = () => {
   };
 
   return (
-    <Container
-      maxWidth="sm"
-      sx={{
-        height: "100vh",
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        overflow: "hidden",
-      }}
-    >
-      <Container
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
         sx={{
+          marginTop: 8,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
-          borderRadius: "10px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          border: "1px solid #333",
-          backgroundColor: "#F0EADA",
-          maxWidth: "500px",
-          maxHeight: "500px",
-          py: 5,
-          margin: "auto",
         }}
       >
-        <FormControl
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            width: "100%",
-          }}
-          onSubmit={handleSubmit}
-        >
-          <Box>
-            <Typography
-              variant="h4"
-              sx={{
-                textAlign: "center",
-                fontWeight: "600",
-                mb: 2,
-                fontFamily: "Roboto, sans-serif",
-              }}
-            >
-              Blog Codigo & Cafe
-            </Typography>
-            <Typography
-              sx={{
-                textAlign: "center",
-                fontFamily: "Roboto, sans-serif",
-                mb: 2,
-              }}
-            >
-              Crea una cuenta gratis o
-              <Link sx={{ ml: 1 }} href="http://localhost:3000/login">
-                inicia sesión
-              </Link>
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                width: "80%",
-              }}
-            >
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <VpnKeyRoundedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Registrate
+        </Typography>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
               <TextField
-                label="Correo Electrónico"
-                variant="outlined"
-                fullWidth
-                margin="normal"
+                autoComplete="given-name"
+                name="firstName"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <TextField
-                label="Nombre de Usuario"
-                variant="outlined"
                 fullWidth
-                margin="normal"
-                required
+                id="firstName"
+                label="Nombre"
+                autoFocus
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
+            </Grid>
+            <Grid item xs={12}>
               <TextField
-                label="Contraseña"
-                variant="outlined"
-                fullWidth
-                margin="normal"
                 required
+                fullWidth
+                id="email"
+                label="Dirección de correo electrónico"
+                name="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                name="password"
+                label="Contraseña"
                 type="password"
+                id="password"
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-            </Box>
-          </Box>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              width="50%"
-              sx={{ marginTop: "20px" }}
-              onClick={handleSubmit}
-            >
-              Registrarse
-            </Button>
-            <Toaster position="top-center" reverseOrder={false} />
-          </Box>
-        </FormControl>
-      </Container>
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Registrate
+          </Button>
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Link href="/login" variant="body2">
+                ¿Ya tienes una cuenta? Iniciar sesión
+              </Link>
+            </Grid>
+          </Grid>
+        </Box>
+      </Box>
+      <Toaster position="top-center" reverseOrder={false} />
     </Container>
   );
 };
