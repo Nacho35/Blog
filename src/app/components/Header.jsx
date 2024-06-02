@@ -12,10 +12,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const router = useRouter();
+  const { username, login } = useAuth();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -26,6 +28,17 @@ const Header = () => {
   };
 
   const handleLogin = () => {
+    router.push("/login");
+  };
+
+  const ManagerLogin = () => {
+    const newToken = sessionStorage.getItem("token");
+    if (newToken) {
+      login(username, newToken);
+      router.push("/");
+      return;
+    }
+
     router.push("/login");
   };
 
@@ -81,7 +94,7 @@ const Header = () => {
               onClick={handleOpenNavMenu}
               color="black"
               sx={{
-                "& .MuiSvgIcon-root": {
+                "&.MuiSvgIcon-root": {
                   fontSize: "2.5rem",
                 },
               }}
@@ -106,12 +119,24 @@ const Header = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              <MenuItem onClick={handleLogin}>
-                <Typography textAlign="center">Iniciar sesión</Typography>
-              </MenuItem>
-              <MenuItem onClick={handleRegister}>
-                <Typography textAlign="center">Registrarse</Typography>
-              </MenuItem>
+              {!username
+                ? [
+                    <MenuItem key="login" onClick={handleLogin}>
+                      <Typography textAlign="center">Iniciar sesión</Typography>
+                    </MenuItem>,
+                    <MenuItem key="register" onClick={handleRegister}>
+                      <Typography textAlign="center">Registrarse</Typography>
+                    </MenuItem>,
+                  ]
+                : [
+                    <Button
+                      key="login"
+                      textAlign="center"
+                      onClick={ManagerLogin}
+                    >
+                      Cerrar sesión
+                    </Button>,
+                  ]}
             </Menu>
           </Box>
 
@@ -121,22 +146,30 @@ const Header = () => {
               justifyContent: "flex-end",
             }}
           >
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{ mx: 1 }}
-              onClick={handleLogin}
-            >
-              Iniciar sesión
-            </Button>
-            <Button
-              variant="contained"
-              color="info"
-              sx={{ mx: 1 }}
-              onClick={handleRegister}
-            >
-              Registrarse
-            </Button>
+            {!username ? (
+              <>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{ mx: 1 }}
+                  onClick={handleLogin}
+                >
+                  Iniciar sesión
+                </Button>
+                <Button
+                  variant="contained"
+                  color="info"
+                  sx={{ mx: 1 }}
+                  onClick={handleRegister}
+                >
+                  Registrarse
+                </Button>
+              </>
+            ) : (
+              <Button variant="contained" onClick={ManagerLogin}>
+                Cerrar sesión
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </Container>
@@ -145,3 +178,4 @@ const Header = () => {
 };
 
 export default Header;
+// TODO hacer que el boton de logout aparesca solo si hay un usuario logueado
