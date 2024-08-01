@@ -36,6 +36,9 @@ const Login = () => {
       try {
         const responseData = await response.json();
         sessionStorage.setItem("token", responseData.jwt);
+        sessionStorage.setItem("userId", responseData.user.id);
+        sessionStorage.setItem("username", responseData.user.username);
+        sessionStorage.setItem("email", responseData.user.email);
 
         toast.success("¡Bienvenido!");
         setTimeout(() => {
@@ -44,6 +47,8 @@ const Login = () => {
       } catch (error) {
         toast.error("Error al iniciar sesión");
       }
+    } else {
+      toast.error("Credenciales incorrectas");
     }
   };
 

@@ -16,12 +16,10 @@ export async function fetchCommentsForPost(postId) {
   }
 }
 
-// TODO: Revisar porque falla el delete y el update
-
-export const fetchDeleteComment = async (postId, commentId) => {
+export const fetchDeleteComment = async (postId, commentId, authorId) => {
   try {
     const response = await fetch(
-      `${API_URL}/comments/api::post.post${postId}/comment/${commentId}`,
+      `${API_URL}/comments/api::post.post:${postId}/comment/${commentId}?authorId=${authorId}`,
       {
         method: "DELETE",
         headers: {
@@ -40,15 +38,10 @@ export const fetchDeleteComment = async (postId, commentId) => {
   }
 };
 
-export const fetchUpdateComment = async (
-  postId,
-  commentId,
-  content,
-  authorId,
-) => {
+export const fetchUpdateComment = async (postId, commentId, content) => {
   try {
     const response = await fetch(
-      `${API_URL}/comments/api::post.post${postId}/comment/${commentId}`,
+      `${API_URL}/comments/api::post.post:${postId}/comment/${commentId}`,
       {
         method: "PUT",
         headers: {
@@ -57,7 +50,7 @@ export const fetchUpdateComment = async (
         },
         body: JSON.stringify({
           author: {
-            id: authorId,
+            id: sessionStorage.getItem("userId"),
           },
           content: content,
         }),

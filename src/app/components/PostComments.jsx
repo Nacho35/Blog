@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import ModeEditOutlineRoundedIcon from "@mui/icons-material/ModeEditOutlineRounded";
 import {
@@ -19,6 +21,7 @@ import {
 const PostComments = ({ postId }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [editingComment, setEditingComment] = useState(null);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -29,7 +32,7 @@ const PostComments = ({ postId }) => {
     fetchComments();
   }, [postId]);
 
-  const handleCommentSubmit = async (event) => {
+  const handleCommentSubmit = async (event, commentId, postId) => {
     event.preventDefault();
 
     const token = sessionStorage.getItem("token");
@@ -45,7 +48,7 @@ const PostComments = ({ postId }) => {
       toast.error("Faltan datos del usuario.");
       return;
     }
-    // TODO Revisar porque los datos del objeto de comentario no son null en author
+
     const commentData = {
       postId,
       content: newComment,
@@ -56,75 +59,79 @@ const PostComments = ({ postId }) => {
       },
     };
 
-    sessionStorage.setItem("lastCommentData", JSON.stringify(commentData));
-
-    try {
-      const response = await fetch(
-        `http://localhost:1337/api/comments/api::post.post:${postId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-          body: JSON.stringify(commentData),
-        },
-      );
-
-      if (response.ok) {
-        const responseData = await response.json();
-        setComments([...comments, responseData]);
-        setNewComment("");
+    if (commentId) {
+      // Actualiza comentario existente
+      try {
+        const updatedComment = await fetchUpdateComment(
+          postId,
+          commentId,
+          newComment,
+          userId,
+        );
+        if (updatedComment) {
+          const updatedComments = comments.map((comment) => {
+            if (comment.id === commentId) {
+              return { ...comment, content: newComment };
+            }
+            return comment;
+          });
+          setComments(updatedComments);
+          setNewComment("");
+          setEditingComment(null);
+          toast.success("Comentario actualizado exitosamente!");
+        }
+      } catch (error) {
+        toast.error(`Ocurrió un error: ${error.message}`);
       }
-      toast.success("¡Comentario publicado exitosamente!");
-    } catch (error) {
-      toast.error(`Ocurrió un error: ${error.message}`);
+    } else {
+      // Publica nuevo comentario
+      try {
+        const response = await fetch(
+          `http://localhost:1337/api/comments/api::post.post:${postId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+            body: JSON.stringify(commentData),
+          },
+        );
+
+        if (response.ok) {
+          const responseData = await response.json();
+          setComments([...comments, responseData]);
+          setNewComment("");
+          toast.success("¡Comentario publicado!");
+        }
+      } catch (error) {
+        toast.error(`Ocurrió un error: ${error.message}`);
+      }
     }
   };
 
-  const handleDeleteClick = async (commentId) => {
+  const handleDeleteClick = async (postId, commentId, authorId) => {
     try {
-      const deletedComment = await fetchDeleteComment(commentId);
+      const deletedComment = await fetchDeleteComment(
+        postId,
+        commentId,
+        authorId,
+      );
       if (deletedComment) {
         const updatedComments = comments.filter(
           (comment) => comment.id !== commentId,
         );
         setComments(updatedComments);
-        toast.success("Comentario eliminado exitosamente!");
+        toast.success("Comentario eliminado!");
       }
     } catch (error) {
       toast.error("Ocurrió un error al intentar eliminar el comentario");
     }
   };
 
-  const handleEditClick = async (commentId, newContent) => {
-    try {
-      const authorId = sessionStorage.getItem("userId");
-
-      const updatedComment = await fetchUpdateComment(
-        commentId,
-        newContent,
-        authorId,
-      );
-
-      if (updatedComment) {
-        const updatedComments = comments.map((comment) => {
-          if (comment.id === commentId) {
-            return { ...comment, content: newContent };
-          }
-          return comment;
-        });
-        setComments(updatedComments);
-        toast.success("Comentario actualizado exitosamente!");
-      }
-    } catch (error) {
-      toast.error("Ocurrió error al intentar actualizar el comentario");
-    }
-  };
-
   return (
-    <Container maxWidth="lg">
-      <Paper elevation={0} sx={{ p: 2, mb: 2 }}>
+    <Container maxWidth="sx">
+      <Paper elevation={0} sx={{ p: 2, mb: 2, border: "1px solid #ddd" }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
           Comentarios:
         </Typography>
@@ -133,71 +140,104 @@ const PostComments = ({ postId }) => {
             ¡Au, sin comentarios por el momento!
           </Typography>
         ) : (
-          comments.map((comment) => (
-            <Box
-              key={comment.id}
-              sx={{
-                display: "flex",
-                alignItems: "left",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                marginBottom: "1rem",
-              }}
-            >
+          <Box
+            sx={{
+              width: "100%",
+              marginBottom: "2rem",
+              margin: "0 auto",
+            }}
+          >
+            {comments.map((comment) => (
               <Box
+                key={comment.id}
                 sx={{
                   display: "flex",
-                  alignItems: "center",
-                  color: "info.main",
+                  alignItems: "left",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  marginBottom: "1rem",
                 }}
               >
-                <Typography
-                  sx={{ textTransform: "capitalize" }}
-                  variant="subtitle1"
-                >
-                  {comment.author.name}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{ marginLeft: "8px", color: "info.main" }}
-                >
-                  {new Date(comment.createdAt).toLocaleString()}
-                </Typography>
-              </Box>
-              <Box
-                sx={{ display: "flex", alignItems: "right", marginTop: "10px" }}
-              >
-                <Typography variant="body1">{comment.content}</Typography>
-              </Box>
-              {sessionStorage.getItem("token") && (
                 <Box
                   sx={{
                     display: "flex",
-                    justifyContent: "end",
                     alignItems: "center",
+                    color: "info.main",
                   }}
                 >
-                  <Button
-                    variant="text"
-                    onClick={() => handleEditClick(comment.id)}
+                  <Typography
+                    sx={{ textTransform: "capitalize" }}
+                    variant="subtitle1"
                   >
-                    <ModeEditOutlineRoundedIcon />
-                  </Button>
-                  <Button
-                    variant="text"
-                    color="error"
-                    onClick={() => handleDeleteClick(comment.id)}
+                    {comment.author.name}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{ marginLeft: "8px", color: "info.main" }}
                   >
-                    <DeleteRoundedIcon />
-                  </Button>
+                    {new Date(comment.createdAt).toLocaleString()}
+                  </Typography>
                 </Box>
-              )}
-            </Box>
-          ))
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "right",
+                    marginTop: "10px",
+                    justifyContent: "space-between",
+                    flexDirection: { xs: "column", md: "row" },
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <CommentRoundedIcon sx={{ marginRight: "10px" }} />
+                    <Typography variant="body1">{comment.content}</Typography>
+                  </Box>
+                  {sessionStorage.getItem("token") &&
+                    Number(comment.author.id) ===
+                      Number(sessionStorage.getItem("userId")) && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "end",
+                        }}
+                      >
+                        <Button
+                          variant="text"
+                          onClick={() => {
+                            setNewComment(comment.content);
+                            setEditingComment(comment.id);
+                          }}
+                        >
+                          <ModeEditOutlineRoundedIcon />
+                        </Button>
+                        <Button
+                          variant="text"
+                          color="error"
+                          onClick={() =>
+                            handleDeleteClick(
+                              postId,
+                              comment.id,
+                              comment.author.id,
+                            )
+                          }
+                        >
+                          <DeleteRoundedIcon />
+                        </Button>
+                      </Box>
+                    )}
+                </Box>
+              </Box>
+            ))}
+          </Box>
         )}
       </Paper>
       {sessionStorage.getItem("token") ? (
-        <form onSubmit={handleCommentSubmit}>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            handleCommentSubmit(event, editingComment, postId);
+          }}
+        >
           <TextField
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
@@ -205,6 +245,7 @@ const PostComments = ({ postId }) => {
             variant="outlined"
             fullWidth
             margin="normal"
+            sx={{ marginBottom: "1rem" }}
           />
           <Button
             type="submit"
@@ -212,7 +253,7 @@ const PostComments = ({ postId }) => {
             color="primary"
             style={{ marginTop: "10px" }}
           >
-            Publicar
+            {editingComment ? "Editar" : "Publicar"}
           </Button>
           <Toaster position="top-center" reverseOrder={false} />
         </form>
