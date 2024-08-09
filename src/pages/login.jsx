@@ -17,7 +17,7 @@ import { Toaster, toast } from "react-hot-toast";
 import ChangePassword from "./setPassword";
 
 const Login = () => {
-  const [identifier, setIdentifier] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [resetToken, setResetToken] = useState(null);
@@ -39,7 +39,7 @@ const Login = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        identifier,
+        email,
         password,
       }),
     });
@@ -65,7 +65,6 @@ const Login = () => {
   };
 
   const handleForgotPassword = async () => {
-    const email = identifier;
     try {
       const response = await fetch(
         "http://localhost:1337/api/auth/forgot-password",
@@ -79,11 +78,15 @@ const Login = () => {
       );
       const responseData = await response.json();
       console.log("Response Data:", responseData);
+
       if (response.ok) {
         toast.success(
           "Se ha enviado un correo electrónico para restablecer su contraseña",
         );
         setShowChangePassword(true);
+        setTimeout(() => {
+          router.push("/setPassword");
+        }, 3000);
       } else {
         console.error("Forgot Password Error Data:", responseData);
         toast.error(
@@ -130,8 +133,8 @@ const Login = () => {
                 name="email"
                 autoComplete="email"
                 autoFocus
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <TextField
                 margin="normal"
