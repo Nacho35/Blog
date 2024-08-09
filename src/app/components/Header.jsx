@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 "use client";
 import LocalCafeIcon from "@mui/icons-material/LocalCafe";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -7,17 +8,22 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
+  const { logout } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
-  const { username, login } = useAuth();
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    setIsAuthenticated(!!token);
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -31,20 +37,49 @@ const Header = () => {
     router.push("/login");
   };
 
-  const ManagerLogin = () => {
-    const newToken = sessionStorage.getItem("token");
-    if (newToken) {
-      login(username, newToken);
-      router.push("/");
-      return;
-    }
-
-    router.push("/login");
+  const handleLogout = () => {
+    logout();
+    sessionStorage.clear();
+    setIsAuthenticated(false);
+    router.push("/");
   };
 
   const handleRegister = () => {
     router.push("/register");
   };
+
+  const AuthButtons = ({ isAuthenticated }) => (
+    <>
+      {!isAuthenticated ? (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: "center",
+            m: 1.5,
+            gap: 3,
+            fontWeight: "semi-bold",
+          }}
+        >
+          <Button variant="contained" color="secondary" onClick={handleLogin}>
+            Iniciar sesión
+          </Button>
+          <Button variant="contained" color="info" onClick={handleRegister}>
+            Registrarse
+          </Button>
+        </Box>
+      ) : (
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleLogout}
+          sx={{ m: 1.5, textWrap: "nowrap", fontWeight: "semi-bold" }}
+        >
+          Cerrar sesión
+        </Button>
+      )}
+    </>
+  );
 
   return (
     <AppBar
@@ -61,7 +96,7 @@ const Header = () => {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: "flex",
@@ -83,7 +118,9 @@ const Header = () => {
           <Box
             sx={{
               display: { xs: "flex", md: "none" },
+              flexDirection: "column",
               justifyContent: "end",
+              backgroundColor: "transparent",
             }}
           >
             <IconButton
@@ -93,50 +130,21 @@ const Header = () => {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="black"
-              sx={{
-                "&.MuiSvgIcon-root": {
-                  fontSize: "2.5rem",
-                },
-              }}
+              sx={{ "&.MuiSvgIcon-root": { fontSize: "2.5rem" } }}
             >
               <MenuIcon />
             </IconButton>
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
               keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
+              sx={{ display: { xs: "block", md: "none" }, padding: 0 }}
             >
-              {!username
-                ? [
-                    <MenuItem key="login" onClick={handleLogin}>
-                      <Typography textAlign="center">Iniciar sesión</Typography>
-                    </MenuItem>,
-                    <MenuItem key="register" onClick={handleRegister}>
-                      <Typography textAlign="center">Registrarse</Typography>
-                    </MenuItem>,
-                  ]
-                : [
-                    <Button
-                      key="login"
-                      textAlign="center"
-                      onClick={ManagerLogin}
-                    >
-                      Cerrar sesión
-                    </Button>,
-                  ]}
+              <AuthButtons isAuthenticated={isAuthenticated} />
             </Menu>
           </Box>
 
@@ -146,30 +154,7 @@ const Header = () => {
               justifyContent: "flex-end",
             }}
           >
-            {!username ? (
-              <>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  sx={{ mx: 1 }}
-                  onClick={handleLogin}
-                >
-                  Iniciar sesión
-                </Button>
-                <Button
-                  variant="contained"
-                  color="info"
-                  sx={{ mx: 1 }}
-                  onClick={handleRegister}
-                >
-                  Registrarse
-                </Button>
-              </>
-            ) : (
-              <Button variant="contained" onClick={ManagerLogin}>
-                Cerrar sesión
-              </Button>
-            )}
+            <AuthButtons isAuthenticated={isAuthenticated} />
           </Box>
         </Toolbar>
       </Container>
@@ -178,4 +163,3 @@ const Header = () => {
 };
 
 export default Header;
-// TODO hacer que el boton de logout aparesca solo si hay un usuario logueado

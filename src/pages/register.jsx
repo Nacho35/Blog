@@ -23,6 +23,11 @@ const RegisterForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (password.length < 6) {
+      toast.error("La contraseña debe tener al menos 6 caracteres");
+      return;
+    }
+
     try {
       const response = await fetch(
         "http://localhost:1337/api/auth/local/register",
@@ -129,7 +134,7 @@ const RegisterForm = () => {
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link href="/login" variant="body2">
-                ¿Ya tienes una cuenta? Iniciar sesión
+                ¿Ya tienes una cuenta?
               </Link>
             </Grid>
           </Grid>

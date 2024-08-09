@@ -1,5 +1,6 @@
 import { Box, Container, Typography } from "@mui/material";
 import { Fragment } from "react";
+import { CustomTypography } from "./CustomText";
 import PostComments from "./PostComments";
 import ProgressBar from "./ProgressBar";
 
@@ -55,13 +56,14 @@ const PostFull = ({ post }) => {
             </Typography>
           </Box>
           <Box>
-            <Typography
+            <CustomTypography
               variant="body2"
               sx={{
                 mt: 2,
                 lineHeight: "1.6",
                 fontSize: "16px",
                 textAlign: "left",
+                fontWeight: "semi-bold",
               }}
             >
               {post.attributes.content.map((paragraph, index) => {
@@ -73,7 +75,7 @@ const PostFull = ({ post }) => {
                   </Fragment>
                 );
               })}
-            </Typography>
+            </CustomTypography>
           </Box>
         </Box>
       </Box>

@@ -1,12 +1,12 @@
-import { Container, Box, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import Image from "next/image";
 import logo from "../assets/logo.png";
 
 const Banner = () => {
   return (
-    <Container maxWidth="auto" className="tw-w-full tw-px-0">
+    <Container maxWidth="lg" className="tw-w-full tw-px-0">
       <Box sx={{ width: "100%", position: "relative" }}>
-        <Box className="tw-object-cover tw-object-center tw-bg-no-repeat tw-w-full tw-h-[60vh] md:tw-h-[55vh] lg:tw-h-[50vh] tw-bg-tertiary"></Box>
+        <Box className="tw-object-cover tw-object-center tw-bg-no-repeat tw-w-full tw-h-[50vh] tw-bg-tertiary"></Box>
         <Box
           sx={{
             position: "absolute",
