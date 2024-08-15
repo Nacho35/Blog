@@ -106,7 +106,11 @@ const Login = () => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2" sx={{ cursor: "pointer" }}>
+              <Link
+                href="/forgot-password"
+                variant="body2"
+                sx={{ cursor: "pointer" }}
+              >
                 ¿Has olvidado tu contraseña?
               </Link>
             </Grid>
