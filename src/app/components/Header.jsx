@@ -5,6 +5,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
@@ -12,12 +13,15 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
 import { useAuth } from "../hooks/useAuth";
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const { logout } = useAuth();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -37,20 +41,36 @@ const Header = () => {
     router.push("/login");
   };
 
-  const handleLogout = () => {
-    logout();
-    sessionStorage.clear();
-    setIsAuthenticated(false);
-    router.push("/");
+  const handleLogout = async () => {
+    setIsLoading(true);
+    try {
+      await toast.promise(logout(), {
+        loading: "Procesando...",
+        success: "Sesión cerrada",
+        error: "Error al cerrar sesión",
+      });
+      setTimeout(() => {
+        setIsAuthenticated(false);
+        router.push("/");
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleRegister = () => {
     router.push("/register");
   };
 
-  const AuthButtons = ({ isAuthenticated }) => (
+  const AuthButtons = ({ isAuthenticated, isLoading }) => (
     <>
-      {!isAuthenticated ? (
+      {isLoading ? (
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      ) : !isAuthenticated ? (
         <Box
           sx={{
             display: "flex",
@@ -144,7 +164,10 @@ const Header = () => {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: "block", md: "none" }, padding: 0 }}
             >
-              <AuthButtons isAuthenticated={isAuthenticated} />
+              <AuthButtons
+                isAuthenticated={isAuthenticated}
+                isLoading={isLoading}
+              />
             </Menu>
           </Box>
 
@@ -158,6 +181,7 @@ const Header = () => {
           </Box>
         </Toolbar>
       </Container>
+      <Toaster position="top-center" reverseOrder={false} />
     </AppBar>
   );
 };
