@@ -12,13 +12,22 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+
   const router = useRouter();
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("userEmail");
+    if (storedEmail) {
+      setIdentifier(storedEmail);
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -40,6 +49,10 @@ const Login = () => {
         sessionStorage.setItem("username", responseData.user.username);
         sessionStorage.setItem("email", responseData.user.email);
 
+        if (rememberMe) {
+          localStorage.setItem("userEmail", responseData.user.email);
+        }
+
         toast.success("¡Bienvenido!");
         setTimeout(() => {
           router.push("/");
@@ -50,6 +63,10 @@ const Login = () => {
     } else {
       toast.error("Credenciales incorrectas");
     }
+  };
+
+  const clearRememberMe = () => {
+    localStorage.removeItem("userEmail");
   };
 
   return (
@@ -93,7 +110,13 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={
+              <Checkbox
+                checked={rememberMe}
+                onChange={(event) => setRememberMe(event.target.checked)}
+                color="primary"
+              />
+            }
             label="Recordarme"
           />
           <Button
@@ -104,6 +127,17 @@ const Login = () => {
           >
             Iniciar sesión
           </Button>
+          <Box sx={{ textAlign: "center" }}>
+            <Button
+              size="small"
+              onClick={clearRememberMe}
+              sx={{
+                my: 1,
+              }}
+            >
+              Dejar de recordarme
+            </Button>
+          </Box>
           <Grid container>
             <Grid item xs>
               <Link

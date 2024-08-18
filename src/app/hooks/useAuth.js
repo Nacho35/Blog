@@ -26,9 +26,18 @@ export const useAuth = () => {
   };
 
   const logout = () => {
-    setUsername("");
-    setToken("");
-    sessionStorage.removeItem("token");
+    return new Promise((resolve, reject) => {
+      try {
+        setUsername("");
+        setToken("");
+        sessionStorage.removeItem("token");
+        sessionStorage.clear();
+        resolve();
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+        reject(error);
+      }
+    });
   };
 
   return { username, token, login, logout };

@@ -10,7 +10,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
@@ -18,13 +17,12 @@ const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (password.length < 6) {
-      toast.error("La contraseña debe tener al menos 6 caracteres");
+    if (password.length < 8) {
+      toast.error("La contraseña debe tener al menos 8 caracteres");
       return;
     }
 
@@ -50,8 +48,8 @@ const RegisterForm = () => {
 
         toast.success("Registro exitoso!");
         setTimeout(() => {
-          router.push("/login");
-        }, 4000);
+          toast("Por favor revisa tu correo para confirmar tu cuenta! 👀");
+        }, 1000);
       } else {
         const errorData = await response.json();
         toast.error(
