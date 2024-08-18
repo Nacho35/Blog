@@ -71,8 +71,7 @@ const Main = () => {
                 sx={{
                   maxWidth: 400,
                   height: "500px",
-                  mt: 1,
-                  mb: 1,
+                  my: 1,
                   mx: "auto",
                   backgroundColor: "white.main",
                 }}
